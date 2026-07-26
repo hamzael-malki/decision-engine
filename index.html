@@ -18,6 +18,9 @@
       max-width: 860px;
       margin: 0 auto;
       padding: 2rem 1rem 4rem;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
     header,
@@ -28,6 +31,21 @@
       border-radius: 12px;
       padding: 1.5rem;
       margin-bottom: 1rem;
+    }
+
+    #category-view {
+      background: transparent;
+      border: none;
+      padding: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    #category-view h2 {
+      text-align: center;
+      margin-bottom: 2rem;
     }
 
     h1,
@@ -86,18 +104,75 @@
 
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
       gap: 1rem;
+      aspect-ratio: 1;
+      margin: 0 auto;
+      max-width: 700px;
     }
 
     .category-button {
-      min-height: 110px;
-      text-align: left;
-      background: #0e5cc7;
+      min-height: auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border: 3px solid transparent;
+      border-radius: 12px;
+      padding: 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      background: #fff;
+      color: #182230;
     }
 
     .category-button:hover {
-      background: #0b4ca6;
+      transform: scale(1.05);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .category-button:nth-child(1) {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border-color: #667eea;
+    }
+
+    .category-button:nth-child(1):hover {
+      background: linear-gradient(135deg, #5a67d8 0%, #6b4199 100%);
+    }
+
+    .category-button:nth-child(2) {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: #fff;
+      border-color: #f093fb;
+    }
+
+    .category-button:nth-child(2):hover {
+      background: linear-gradient(135deg, #e88ce9 0%, #e54d5b 100%);
+    }
+
+    .category-button:nth-child(3) {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #fff;
+      border-color: #4facfe;
+    }
+
+    .category-button:nth-child(3):hover {
+      background: linear-gradient(135deg, #3a9eee 0%, #00d4f5 100%);
+    }
+
+    .category-button:nth-child(4) {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      color: #182230;
+      border-color: #43e97b;
+    }
+
+    .category-button:nth-child(4):hover {
+      background: linear-gradient(135deg, #38d66b 0%, #2be6c7 100%);
     }
 
     .back-button {
