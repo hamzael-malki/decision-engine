@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="MVP de la Decision Engine Platform">
+    <title>Decision Engine Platform</title>
+    <style>
+      :root { color-scheme: light; font-family: system-ui, sans-serif; background: #f6f8fb; color: #182230; }
+      body { max-width: 860px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+      header, section, form { background: #fff; border: 1px solid #d9e1ea; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+      h1, h2 { margin-top: 0; } label { display: block; font-weight: 650; margin: 1rem 0 .4rem; }
+      textarea, select, button { font: inherit; width: 100%; box-sizing: border-box; }
+      textarea, select { border: 1px solid #9aa8b7; border-radius: 7px; padding: .7rem; min-height: 2.8rem; }
+      textarea { min-height: 7rem; resize: vertical; } button { border: 0; border-radius: 7px; padding: .8rem 1rem; background: #1769e0; color: #fff; cursor: pointer; }
+      button:disabled { opacity: .6; cursor: wait; } .error { color: #b42318; } pre { white-space: pre-wrap; }
+      .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+      .category-button { min-height: 110px; text-align: left; background: #0e5cc7; } .category-button:hover { background: #0b4ca6; }
+      .back-button { width: auto; margin-bottom: 1rem; background: #556575; } #result { margin-top: 1rem; }
+    </style>
+  </head>
+  <body>
+    <header><h1>Decision Engine Platform</h1><p>Choisissez un objectif, puis un modèle de décision adapté.</p></header>
+    <main>
+      <section id="category-view"><h2>Par où souhaitez-vous commencer ?</h2><div id="category-list" class="category-grid"></div></section>
+      <section id="model-view" hidden>
+        <button id="back-button" class="back-button" type="button">← Changer de thème</button>
+        <h2 id="category-title"></h2>
+        <form id="decision-form" novalidate>
+          <label for="model-select">Modèle</label>
+          <select id="model-select" name="model"><option value="">Sélectionnez votre modèle</option></select>
+          <p id="load-status" role="status">Sélectionnez votre modèle pour approfondir votre situation.</p>
+          <div id="model-fields"></div>
+          <button type="submit" disabled>Exécuter l'analyse</button>
+        </form>
+        <section id="result" hidden aria-live="polite"><h2>Résultat</h2><pre id="result-content"></pre></section>
+      </section>
+    </main>
+    <script type="module">
+      import { engine } from './core/engine.js';
+      import { state } from './core/state.js';
+      import { eventBus } from './core/eventBus.js';
+      import { validator } from './core/validator.js';
+      import { StorageManager } from './storage/StorageManager.js';
+      import { CategoryRouter } from './ui/CategoryRouter.js';
+
+      const categoryView = document.querySelector('#category-view');
+      const categoryList = document.querySelector('#category-list');
+      const modelView = document.querySelector('#model-view');
+      const categoryTitle = document.querySelector('#category-title');
+      const form = document.querySelector('#decision-form');
+      const select = document.querySelector('#model-select');
+      const fields = document.querySelector('#model-fields');
+      const status = document.querySelector('#load-status');
+      const result = document.querySelector('#result');
+      const resultContent = document.querySelector('#result-content');
+      const submitButton = form.querySelector('button[type="submit"]');
+      let registry;
+      let visibleModels = [];
+
+      try {
+        registry = await fetch('./data/models.json').then(response => {
+          if (!response.ok) throw new Error('Impossible de charger le registre des modèles.');
+          return response.json();
+        });
+        validator.validateRegistry(registry.models);
+        if (!Array.isArray(registry.categories) || registry.categories.length !== 4) throw new Error('Les catégories sont invalides.');
+      } catch (error) {
+        categoryList.textContent = 'Les modèles ne peuvent pas être chargés. Ouvrez le projet avec un serveur local ou via GitHub Pages.';
+        categoryList.className = 'error';
+        throw error;
+      }
+
+      const renderFields = () => {
+        const model = visibleModels.find(item => item.id === select.value);
+        result.hidden = true;
+        if (!model) {
+          state.set('currentModel', null);
+          fields.replaceChildren();
+          status.textContent = 'Sélectionnez votre modèle pour approfondir votre situation.';
+          submitButton.disabled = true;
+          return;
+        }
+        state.set('currentModel', model);
+        status.textContent = '';
+        submitButton.disabled = false;
+        fields.replaceChildren(...model.fields.map(field => {
+          const label = document.createElement('label');
+          label.htmlFor = field.id;
+          label.textContent = field.label + (field.required ? ' *' : '');
+          const input = document.createElement(field.type === 'textarea' ? 'textarea' : 'input');
+          input.id = input.name = field.id;
+          input.required = field.required;
+          if (field.type !== 'textarea') input.type = field.type;
+          label.append(input);
+          return label;
+        }));
+      };
+
+      const selectCategory = async category => {
+        visibleModels = await CategoryRouter.getModelsByCategory(category.id, registry);
+        categoryTitle.textContent = category.label;
+        select.replaceChildren(new Option('Sélectionnez votre modèle', ''));
+        visibleModels.forEach(model => select.add(new Option(model.name, model.id)));
+        categoryView.hidden = true;
+        modelView.hidden = false;
+        renderFields();
+      };
+
+      registry.categories.forEach(category => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'category-button';
+        button.textContent = category.label;
+        button.addEventListener('click', () => selectCategory(category));
+        categoryList.append(button);
+      });
+
+      document.querySelector('#back-button').addEventListener('click', () => {
+        state.set('currentModel', null);
+        modelView.hidden = true;
+        categoryView.hidden = false;
+      });
+      select.addEventListener('change', renderFields);
+      form.addEventListener('submit', async event => {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        const model = visibleModels.find(item => item.id === select.value);
+        const userInput = Object.fromEntries(new FormData(form));
+        submitButton.disabled = true;
+        try {
+          const output = await engine.executeModel(model, userInput);
+          resultContent.textContent = JSON.stringify(output, null, 2);
+          result.hidden = false;
+        } catch (error) {
+          resultContent.textContent = error.message;
+          resultContent.className = 'error';
+          result.hidden = false;
+        } finally { submitButton.disabled = false; }
+      });
+      eventBus.subscribe('MODEL_FINISHED', event => StorageManager.save('lastExecution', { ...event, at: new Date().toISOString() }));
+    </script>
+  </body>
+</html>

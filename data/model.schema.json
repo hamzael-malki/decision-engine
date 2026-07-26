@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Decision Engine Model Registry",
+  "type": "object",
+  "required": ["categories", "models"],
+  "additionalProperties": false,
+  "properties": {
+    "categories": { "type": "array", "minItems": 4, "items": { "type": "object", "required": ["id", "label"], "additionalProperties": false, "properties": { "id": { "enum": ["self-improvement", "self-understanding", "others-understanding", "others-improvement"] }, "label": { "type": "string", "minLength": 1 } } } },
+    "models": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["id", "name", "version", "category", "tags", "fields", "defaultProvider"], "additionalProperties": false, "properties": { "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }, "name": { "type": "string", "minLength": 1 }, "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" }, "category": { "enum": ["self-improvement", "self-understanding", "others-understanding", "others-improvement"] }, "tags": { "type": "array", "items": { "type": "string" } }, "defaultProvider": { "enum": ["local", "ai"] }, "fields": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["id", "label", "type", "required"], "additionalProperties": false, "properties": { "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }, "label": { "type": "string", "minLength": 1 }, "type": { "enum": ["textarea", "text", "number", "date"] }, "required": { "type": "boolean" } } } } } } }
+  }
+}

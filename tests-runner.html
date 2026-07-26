@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tests Modèles - Decision Engine</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f6f8fb;
+      color: #182230;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    h1 { margin-top: 0; }
+    .test-result {
+      background: #fff;
+      border-left: 4px solid #1769e0;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 8px;
+    }
+    .test-result.pass {
+      border-left-color: #0d8c42;
+      background: #f0f9f6;
+    }
+    .test-result.fail {
+      border-left-color: #b42318;
+      background: #faf4f3;
+    }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .summary-card {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .summary-card.pass { border-top: 3px solid #0d8c42; }
+    .summary-card.fail { border-top: 3px solid #b42318; }
+    pre { background: #f0f0f0; padding: 1rem; border-radius: 4px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🧪 Tests des Modèles - Architecture Modulaire</h1>
+    <p>Validation que chaque modèle fonctionne correctement en isolation</p>
+  </header>
+
+  <main id="results"></main>
+  <div id="summary"></div>
+
+  <script type="module">
+    import { EisenhowerModel } from './providers/models/EisenhowerModel.js';
+    import { SWOTModel } from './providers/models/SWOTModel.js';
+    import { EmpathyMapModel } from './providers/models/EmpathyMapModel.js';
+    import { GROWModel } from './providers/models/GROWModel.js';
+
+    const tests = [
+      {
+        name: 'Eisenhower - Matrice d\'urgence/importance',
+        model: EisenhowerModel,
+        config: {
+          id: 'eisenhower',
+          name: 'Matrice d\'Eisenhower'
+        },
+        input: {
+          taches: `Répondre emails urgent
+Stratégie annuelle important
+Café ami pas urgent pas important
+Appel client urgent pas important
+Réunion stratégique urgent important`
+        },
+        expectations: ['do_first', 'schedule', 'delegate', 'eliminate', 'totalTasks']
+      },
+      {
+        name: 'SWOT - Analyse forces/faiblesses/opportunités/menaces',
+        model: SWOTModel,
+        config: {
+          id: 'swot',
+          name: 'Analyse SWOT'
+        },
+        input: {
+          forces: 'Leadership technique\nExpérience équipe',
+          faiblesses: 'Resources limitées\nMarché nouveau',
+          opportunites: 'Cloud growth\nPartnerships',
+          menaces: 'Concurrence accrue\nRegulation'
+        },
+        expectations: ['strengths', 'weaknesses', 'opportunities', 'threats', 'counts']
+      },
+      {
+        name: 'Empathy Map - Extraction émotions/besoins/frustrations',
+        model: EmpathyMapModel,
+        config: {
+          id: 'empathy-map',
+          name: 'Carte d\'empathie'
+        },
+        input: {
+          personne: 'Manager stressé par changements organisationnels, veut clarté et support, frustré par manque communication'
+        },
+        expectations: ['emotions', 'needs', 'frustrations', 'insights']
+      },
+      {
+        name: 'GROW - Coaching et développement d\'objectif',
+        model: GROWModel,
+        config: {
+          id: 'grow',
+          name: 'Modèle GROW'
+        },
+        input: {
+          objectif: 'Améliorer mon leadership et confiance en tant que manager'
+        },
+        expectations: ['objectiveType', 'coachingQuestions', 'actionSuggestions']
+      }
+    ];
+
+    async function runTests() {
+      const resultsDiv = document.getElementById('results');
+      const summaryDiv = document.getElementById('summary');
+      let passed = 0;
+      let failed = 0;
+
+      for (const test of tests) {
+        const testDiv = document.createElement('div');
+        testDiv.className = 'test-result';
+
+        try {
+          const result = await test.model.execute(test.config, test.input);
+
+          // Validate structure
+          if (!result.modelId || !result.provider || !result.summary || !result.data) {
+            throw new Error('Structure de résultat invalide');
+          }
+
+          // Validate expected keys
+          const missing = test.expectations.filter(key => !(key in result.data));
+          if (missing.length > 0) {
+            throw new Error(`Clés manquantes dans data: ${missing.join(', ')}`);
+          }
+
+          testDiv.classList.add('pass');
+          testDiv.innerHTML = `
+            <strong>✅ ${test.name}</strong>
+            <p><strong>Summary:</strong> ${result.summary}</p>
+            <p><strong>Data keys:</strong> ${Object.keys(result.data).slice(0, 5).join(', ')}${Object.keys(result.data).length > 5 ? '...' : ''}</p>
+            <details>
+              <summary>Voir les données complètes</summary>
+              <pre>${JSON.stringify(result.data, null, 2)}</pre>
+            </details>
+          `;
+          passed++;
+        } catch (error) {
+          testDiv.classList.add('fail');
+          testDiv.innerHTML = `
+            <strong>❌ ${test.name}</strong>
+            <p><strong>Erreur:</strong> ${error.message}</p>
+          `;
+          failed++;
+        }
+
+        resultsDiv.appendChild(testDiv);
+      }
+
+      // Summary
+      const summaryHTML = `
+        <div class="summary">
+          <div class="summary-card pass">
+            ✅ Passés<br>
+            <span style="font-size: 2em; color: #0d8c42;">${passed}</span>
+          </div>
+          <div class="summary-card fail">
+            ❌ Échoués<br>
+            <span style="font-size: 2em; color: #b42318;">${failed}</span>
+          </div>
+          <div class="summary-card">
+            📊 Total<br>
+            <span style="font-size: 2em;">${passed + failed}</span>
+          </div>
+        </div>
+        ${failed === 0 ? '<div style="background: #0d8c42; color: white; padding: 1rem; margin-top: 2rem; border-radius: 8px; text-align: center;"><strong>🎉 TOUS LES TESTS SONT PASSÉS!</strong><br>L\'architecture modulaire fonctionne parfaitement.</div>' : ''}
+      `;
+      summaryDiv.innerHTML = summaryHTML;
+    }
+
+    runTests();
+  </script>
+</body>
+</html>
