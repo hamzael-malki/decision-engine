@@ -33,16 +33,21 @@
       margin-bottom: 1rem;
     }
 
+    main {
+      position: relative;
+      flex: 1;
+    }
+
     #category-view {
       background: transparent;
       border: none;
       padding: 0;
-      flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
       opacity: 1;
       transition: opacity 0.4s ease-out;
+      min-height: 500px;
     }
 
     #category-view.hidden {
@@ -56,25 +61,33 @@
     }
 
     #model-view {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
       opacity: 1;
       transition: opacity 0.4s ease-in;
+      background: #fff;
+      border: 1px solid #d9e1ea;
+      border-radius: 12px;
+      padding: 1.5rem;
+      min-height: 500px;
     }
 
     #model-view.hidden {
       opacity: 0;
       pointer-events: none;
-      display: none;
     }
 
     #result {
       opacity: 1;
       transition: opacity 0.4s ease-in;
+      margin-top: 1rem;
     }
 
     #result.hidden {
       opacity: 0;
       pointer-events: none;
-      display: none;
     }
 
     h1,
