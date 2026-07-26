@@ -486,6 +486,7 @@
       categoryView.classList.add('hidden');
       modelView.classList.remove('hidden');
       renderFields();
+      modelView.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
     registry.categories.forEach(category => {
