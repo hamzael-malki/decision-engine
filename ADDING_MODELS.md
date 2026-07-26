@@ -294,21 +294,82 @@ Le routeur dispatche automatiquement vers `GROWModel.execute()`.
 
 ---
 
-## 4. Validation et schéma
+## 5. Personnaliser l'affichage du résultat (Renderer)
 
-### 5.1 Vérifier la déclaration
+Par défaut, tous les résultats affichent un **JSON brut** (fallback). Pour afficher vos données de manière élégante, créez un **renderer HTML personnalisé** :
+
+### 5.1 Ajouter un Renderer
+
+Modifiez `ui/ResultRenderer.js` et ajoutez votre modèle :
+
+```js
+export const ResultRenderer = {
+  'mon-modele': (output) => {
+    const { data } = output;
+    return `
+      <div class="result-container mon-modele-result">
+        <h3>📊 Mon Modèle</h3>
+        <p>${data.description}</p>
+        <ul>
+          ${data.items?.map(item => `<li>${item}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+  },
+  // ... autres modèles
+};
+```
+
+### 5.2 Ajouter les Styles CSS
+
+Rajoutez des styles dans `index.html` (section `<style>`) :
+
+```css
+.mon-modele-result {
+  margin-top: 1.5rem;
+}
+
+.mon-modele-result ul {
+  padding-left: 1.2rem;
+  margin: 1rem 0;
+}
+```
+
+### 5.3 Structure de Données Recommandée
+
+Pour faciliter le rendu, retournez une structure claire :
+
+```js
+return {
+  modelId: 'mon-modele',
+  provider: 'local',
+  summary: 'Résumé court pour l\'historique',
+  data: {
+    title: 'Titre du résultat',
+    items: ['item1', 'item2'],
+    statistics: { total: 2 },
+    recommendations: ['À faire 1', 'À faire 2']
+  }
+};
+```
+
+---
+
+## 6. Validation et schéma
+
+### 6.1 Vérifier la déclaration
 
 1. Ouvrez `http://127.0.0.1:8765/` (voir `README.md` pour lancer le serveur)
 2. Votre nouveau modèle doit apparaître dans la catégorie sélectionnée
 3. Les champs du formulaire doivent s'afficher correctement
 
-### 5.2 Tester la logique
+### 6.2 Tester la logique
 
 1. Remplissez le formulaire avec des données de test
 2. Cliquez sur "Exécuter l'analyse"
 3. Vérifiez que le résultat JSON est celui attendu
 
-### 5.3 Tests unitaires (optionnel)
+### 6.3 Tests unitaires (optionnel)
 
 Créez un test dans `tests/` :
 
@@ -343,7 +404,7 @@ npm test
 
 ---
 
-## 6. Bonnes pratiques
+## 7. Bonnes pratiques
 
 ✅ **À faire** :
 - Utiliser des IDs uniques en kebab-case
@@ -360,7 +421,7 @@ npm test
 
 ---
 
-## 7. Exemple avancé : Provider AI
+## 8. Exemple avancé : Provider AI
 
 Pour utiliser l'AIProvider, modifiez `defaultProvider` à `"ai"` dans votre modèle, puis implémentez dans `providers/AIProvider.js` :
 
