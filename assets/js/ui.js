@@ -20,6 +20,8 @@ export async function init() {
   const submitButton = form.querySelector('button[type="submit"]');
   let registry;
   let visibleModels = [];
+  let pendingTransition = null;
+  let pendingFallback = null;
 
   try {
     registry = await fetch('./data/models.json').then(response => {
@@ -65,9 +67,27 @@ export async function init() {
     categoryTitle.textContent = category.label;
     select.replaceChildren(new Option('Sélectionnez votre modèle', ''));
     visibleModels.forEach(model => select.add(new Option(model.name, model.id)));
+    // Hide categories and reveal model view, but defer heavy DOM rendering until transition ends
     categoryView.classList.add('hidden');
     modelView.classList.remove('hidden');
-    renderFields();
+
+    // Clean previous pending listeners if any
+    if (pendingTransition) { modelView.removeEventListener('transitionend', pendingTransition); clearTimeout(pendingFallback); pendingTransition = null; pendingFallback = null; }
+
+    const onTransitionEnd = (e) => {
+      if (e.propertyName !== 'opacity') return;
+      // Render fields after animation completes
+      renderFields();
+      modelView.removeEventListener('transitionend', onTransitionEnd);
+      if (pendingFallback) { clearTimeout(pendingFallback); pendingFallback = null; }
+      pendingTransition = null;
+    };
+
+    pendingTransition = onTransitionEnd;
+    modelView.addEventListener('transitionend', onTransitionEnd);
+    // Fallback: if transitionend doesn't fire, render after 400ms
+    pendingFallback = setTimeout(() => { if (pendingTransition) { renderFields(); modelView.removeEventListener('transitionend', pendingTransition); pendingTransition = null; pendingFallback = null; } }, 400);
+
     modelView.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
@@ -82,6 +102,8 @@ export async function init() {
 
   document.querySelector('#back-button').addEventListener('click', () => {
     state.set('currentModel', null);
+    // Cancel pending render if user navigates back during transition
+    if (pendingTransition) { modelView.removeEventListener('transitionend', pendingTransition); clearTimeout(pendingFallback); pendingTransition = null; pendingFallback = null; }
     modelView.classList.add('hidden');
     categoryView.classList.remove('hidden');
   });
