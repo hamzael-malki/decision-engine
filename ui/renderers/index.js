@@ -17,12 +17,28 @@ const MODEL_MAP = {
   // add modelId -> renderer mappings as needed
 };
 
+const RESULT_TYPE_MAP = {
+  matrix,
+  canvas,
+  list,
+  comparison,
+  distribution,
+  text,
+  table,
+  hierarchy
+};
+
 export function detectRenderer(output) {
   if (!output || !output.data) return fallback;
-  // explicit modelId mapping first
+  // 1) explicit presentation.resultType preferred (models should expose a presentation block)
+  const presType = output.presentation && output.presentation.resultType;
+  if (presType && RESULT_TYPE_MAP[presType]) return RESULT_TYPE_MAP[presType];
+  // 2) legacy top-level resultType
+  if (output.resultType && RESULT_TYPE_MAP[output.resultType]) return RESULT_TYPE_MAP[output.resultType];
+  // 3) explicit modelId mapping
   if (output.modelId && MODEL_MAP[output.modelId]) return MODEL_MAP[output.modelId];
   const d = output.data;
-  // shape-based heuristics
+  // 4) shape-based heuristics (fallback)
   if (d.matrix || d.quadrants) return matrix;
   if (d.sections || d.canvas || d.personDescription) return canvas;
   if (d.rows || d.table) return table;

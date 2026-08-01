@@ -107,6 +107,15 @@ export const GROWModel = {
       provider: 'local',
       summary: `Modèle GROW - Coaching pour objectif: ${objectiveType}`,
       resultType: 'list',
+      presentation: {
+        title: 'GROW Coaching',
+        icon: '🎯',
+        blocks: [
+          { type: 'text', label: 'Objectif', value: objective },
+          { type: 'list', label: 'Questions', value: coachingQuestions.goal.slice(0,3) },
+          { type: 'list', label: 'Suggestions d\'actions', value: (actionSuggestions[objectiveType] || actionSuggestions['Générique']) }
+        ]
+      },
       data: {
         objectif: objective,
         objectiveType,

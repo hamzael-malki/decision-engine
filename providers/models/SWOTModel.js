@@ -63,6 +63,17 @@ export const SWOTModel = {
       provider: 'local',
       summary: `Analyse SWOT - ${counts.strengths} forces, ${counts.weaknesses} faiblesses, ${counts.opportunities} opportunités, ${counts.threats} menaces`,
       resultType: 'matrix',
+      presentation: {
+        title: 'SWOT Analysis',
+        icon: '📊',
+        blocks: [
+          { type: 'kpi', label: 'Forces', value: counts.strengths },
+          { type: 'kpi', label: 'Faiblesses', value: counts.weaknesses },
+          { type: 'kpi', label: 'Opportunités', value: counts.opportunities },
+          { type: 'kpi', label: 'Menaces', value: counts.threats },
+          { type: 'list', label: 'Stratégies', value: Object.entries(strategies).map(([k,v])=>`${k}: ${v}`) }
+        ]
+      },
       data: {
         counts,
         analysis,
