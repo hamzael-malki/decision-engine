@@ -1,0 +1,72 @@
+{
+  "eisenhower": {
+    "modelId": "eisenhower",
+    "summary": "Matrice d'Eisenhower - 4 tâches analysées (50% à faire d'urgence)",
+    "resultType": "matrix",
+    "data": {
+      "totalTasks": 4,
+      "distribution": { "do_first_pct": 50, "schedule_pct": 25, "delegate_pct": 25, "eliminate_pct": 0 },
+      "matrix": {
+        "do_first": ["Préparer la présentation", "Répondre au client urgent"],
+        "schedule": ["Planifier la réunion trimestrielle"],
+        "delegate": ["Mettre à jour la base de données"],
+        "eliminate": []
+      },
+      "recommendations": {
+        "do_first": "Faites ces tâches ce jour même.",
+        "schedule": "Bloquez du temps la semaine prochaine.",
+        "delegate": "Déléguez au membre de l'équipe.",
+        "eliminate": "Supprimez si non nécessaire."
+      }
+    }
+  },
+
+  "swot": {
+    "modelId": "swot",
+    "summary": "Analyse SWOT - 2 forces, 1 faiblesse, 1 opportunité, 0 menace",
+    "resultType": "matrix",
+    "data": {
+      "counts": { "strengths": 2, "weaknesses": 1, "opportunities": 1, "threats": 0 },
+      "analysis": {
+        "strengths": ["Bonne communication", "Expérience technique"],
+        "weaknesses": ["Ressources limitées"],
+        "opportunities": ["Nouvelle demande marché"],
+        "threats": []
+      },
+      "strategies": { "SO": "Exploiter compétences techniques pour saisir opportunités" },
+      "recommendations": { "focus": "Concentrez-vous sur vos forces pour croître." }
+    }
+  },
+
+  "empathy-map": {
+    "modelId": "empathy-map",
+    "summary": "Carte d'Empathie - échantillon",
+    "resultType": "canvas",
+    "data": {
+      "personDescription": "Utilisateur type qui cherche simplicité et rapidité.",
+      "emotions": ["Frustration", "Anxiété"],
+      "needs": ["Clarté", "Réassurance"],
+      "frustrations": ["Processus trop long"],
+      "insights": { "primaryEmotion": "Frustration", "mainNeed": "Simplicité" },
+      "recommendations": { "listen": "Validez les frustrations identifiées." }
+    }
+  },
+
+  "grow": {
+    "modelId": "grow",
+    "summary": "Modèle GROW - Coaching pour objectif: Développement de compétence",
+    "resultType": "list",
+    "data": {
+      "objectif": "Améliorer mes compétences en présentation",
+      "objectiveType": "Développement de compétence",
+      "coachingQuestions": {
+        "goal": ["Pourquoi cet objectif est-il important?"],
+        "reality": ["Que faites-vous aujourd'hui?"],
+        "options": ["Prendre un cours", "Pratiquer devant collègues"],
+        "will": ["Planifier 1h par semaine"]
+      },
+      "actionSuggestions": ["Suivre un cours en ligne", "Demander du feedback"],
+      "recommendations": { "phase1": "Clarifier l'objectif" }
+    }
+  }
+}
