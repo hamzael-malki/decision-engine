@@ -57,6 +57,7 @@ export const EisenhowerModel = {
       modelId: modelConfig.id,
       provider: 'local',
       summary: `Matrice d'Eisenhower - ${total} tâches analysées (${distribution.do_first_pct}% à faire d'urgence)`,
+      resultType: 'matrix',
       data: {
         totalTasks: total,
         matrix,

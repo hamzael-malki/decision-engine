@@ -106,6 +106,7 @@ export const GROWModel = {
       modelId: modelConfig.id,
       provider: 'local',
       summary: `Modèle GROW - Coaching pour objectif: ${objectiveType}`,
+      resultType: 'list',
       data: {
         objectif: objective,
         objectiveType,

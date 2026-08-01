@@ -62,6 +62,7 @@ export const SWOTModel = {
       modelId: modelConfig.id,
       provider: 'local',
       summary: `Analyse SWOT - ${counts.strengths} forces, ${counts.weaknesses} faiblesses, ${counts.opportunities} opportunités, ${counts.threats} menaces`,
+      resultType: 'matrix',
       data: {
         counts,
         analysis,
