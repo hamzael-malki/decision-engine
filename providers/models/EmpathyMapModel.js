@@ -59,6 +59,15 @@ export const EmpathyMapModel = {
       provider: 'local',
       summary: `Carte d'Empathie - Analyse de ${Math.round(description.length / 10)} concepts identifiés`,
       resultType: 'canvas',
+      presentation: {
+        title: 'Empathy Map',
+        icon: '🧠',
+        blocks: [
+          { type: 'text', label: 'Description', value: description },
+          { type: 'list', label: 'Émotions', value: extraitEmotions },
+          { type: 'list', label: 'Besoins', value: extraitBesoins }
+        ]
+      },
       data: {
         personDescription: description,
         empathyMap,

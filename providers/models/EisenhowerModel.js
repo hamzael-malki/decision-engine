@@ -58,6 +58,20 @@ export const EisenhowerModel = {
       provider: 'local',
       summary: `Matrice d'Eisenhower - ${total} tâches analysées (${distribution.do_first_pct}% à faire d'urgence)`,
       resultType: 'matrix',
+      presentation: {
+        title: 'Matrice d\'Eisenhower',
+        icon: '⚡',
+        blocks: [
+          { type: 'kpi', label: 'Total tâches', value: total },
+          { type: 'distribution', label: 'Répartition', value: distribution },
+          { type: 'list', label: 'Recommandations', value: [
+            `Do First: ${matrix.do_first.length} tâches`,
+            `Schedule: ${matrix.schedule.length} tâches`,
+            `Delegate: ${matrix.delegate.length} tâches`,
+            `Eliminate: ${matrix.eliminate.length} tâches`
+          ] }
+        ]
+      },
       data: {
         totalTasks: total,
         matrix,
