@@ -1,0 +1,17 @@
+# Node
+node_modules/
+
+# Build artifacts
+dist/
+
+# Logs
+npm-debug.log*
+
+# Tests snapshots (generated)
+/tests/snapshots/html/*
+!/tests/snapshots/html/.gitkeep
+/tests/snapshots/**/*.png
+
+# Editor
+.vscode/
+.idea/
