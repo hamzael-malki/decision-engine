@@ -42,9 +42,20 @@ Chaque modèle est déclaré dans `data/models.json` et suit cette structure :
       "placeholder": "Indice optionnel"
     }
   ],
-  "defaultProvider": "local"
+  "defaultProvider": "local",
+  "presentation": {
+    "resultType": "matrix", // optional: matrix | canvas | list | text | table | distribution
+    "title": "Titre affiché",
+    "icon": "📊",
+    "blocks": [
+      { "type": "kpi", "label": "Total", "value": 12 },
+      { "type": "list", "label": "Top items", "value": ["A","B"] }
+    ]
+  }
 }
 ```
+
+Note : `presentation` est facultatif mais recommandé. Les renderers privilégient désormais `presentation.resultType` et `presentation` (titre/icône/blocs) pour produire un rendu riche sans dupliquer la logique métier.
 
 ### Explications des champs
 
@@ -153,6 +164,18 @@ export const MonModeleModel = {
       modelId: modelConfig.id,
       provider: 'local',
       summary: `Mon Modèle - Résumé de l'analyse`,
+      // Optional: indicate the renderer type explicitly
+      resultType: 'matrix',
+      // Optional presentation metadata the UI renderers will prefer
+      presentation: {
+        title: 'Mon Modèle',
+        icon: '📈',
+        resultType: 'matrix',
+        blocks: [
+          { type: 'text', label: 'Résumé', value: '...' },
+          { type: 'list', label: 'Points clés', value: ['A','B'] }
+        ]
+      },
       data: analysis
     };
   }
@@ -300,26 +323,36 @@ Par défaut, tous les résultats affichent un **JSON brut** (fallback). Pour aff
 
 ### 5.1 Ajouter un Renderer
 
-Modifiez `ui/ResultRenderer.js` et ajoutez votre modèle :
+Plutôt que d'éditer directement `ui/ResultRenderer.js` (wrapper rétrocompatible), ajoutez un renderer typé dans `ui/renderers/` et enregistrez-le dans le registre `ui/renderers/index.js`.
+
+1) Créez `ui/renderers/mon-modele.js` :
 
 ```js
-export const ResultRenderer = {
-  'mon-modele': (output) => {
-    const { data } = output;
-    return `
-      <div class="result-container mon-modele-result">
-        <h3>📊 Mon Modèle</h3>
-        <p>${data.description}</p>
-        <ul>
-          ${data.items?.map(item => `<li>${item}</li>`).join('')}
-        </ul>
-      </div>
-    `;
-  },
-  // ... autres modèles
-};
+export function render(output) {
+  const data = output.data || {};
+  return `
+    <div class="result-container mon-modele-result">
+      <h3>${(output.presentation && output.presentation.icon) || '📊'} ${(output.presentation && output.presentation.title) || 'Mon Modèle'}</h3>
+      <p>${data.description || ''}</p>
+      <ul>
+        ${(data.items || []).map(item => `<li>${item}</li>`).join('')}
+      </ul>
+    </div>
+  `;
+}
 ```
 
+2) Enregistrez le renderer dans `ui/renderers/index.js` (ajoutez au MODEL_MAP ou laissez la détection heuristique via `resultType` / `presentation.resultType`).
+
+Exemple d'enregistrement :
+```js
+import * as monmodele from './mon-modele.js';
+const MODEL_MAP = { 'mon-modele': monmodele, /* ... */ };
+```
+
+3) Avantage : garder `ui/ResultRenderer.js` comme wrapper stable et centralisé, éviter de dupliquer du HTML dans le core.
+
+Rappel : les renderers privilégient `presentation` (title/icon/blocks) — ajoutez `presentation` dans le modèle pour un rendu riche et testable.
 ### 5.2 Ajouter les Styles CSS
 
 Rajoutez des styles dans `index.html` (section `<style>`) :
@@ -445,12 +478,16 @@ async function executeExempleAI(modelConfig, userInput) {
 - [ ] Modèle déclaré dans `data/models.json`
 - [ ] ID unique et en kebab-case
 - [ ] Catégorie valide (une des 4)
-- [ ] Champs avec `id`, `label`, `type`, `required`
-- [ ] Logique implémentée dans `LocalProvider.js` (ou fichier dédié)
-- [ ] Modèle apparaît dans l'UI
-- [ ] Formulaire se remplit correctement
+- [ ] Champs avec `id`, `label`, `type`, `required` (vérifier que l'`id` correspond aux clés attendues par le modèle)
+- [ ] `presentation` ajouté si rendu riche souhaité (title, icon, blocks, resultType)
+- [ ] Exporter le modèle dans `providers/models/index.js`
+- [ ] Enregistrer le modèle dans `providers/LocalProvider.js` (clé kebab-case -> implémentation)
+- [ ] Ajouter un renderer dans `ui/renderers/` si rendu spécifique nécessaire et mettre à jour `ui/renderers/index.js` (ou s'appuyer sur heuristiques/resultType)
+- [ ] Modèle apparaît dans l'UI (dropdown et formulaire)
+- [ ] Formulaire se remplit correctement (les `id` des champs correspondent aux clés lues par le modèle)
 - [ ] Résultat s'affiche après soumission
-- [ ] Tests (optionnel mais recommandé)
+- [ ] Regénérer snapshots HTML si ajout d'un modèle visible : `tests/generate-snapshots.py`
+- [ ] Tests unitaires (optionnel mais recommandé)
 
 ---
 
