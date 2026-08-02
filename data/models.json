@@ -1,14 +1,135 @@
 {
   "categories": [
-    { "id": "self-improvement", "label": "Comment m'améliorer ?" },
-    { "id": "self-understanding", "label": "Comment mieux me comprendre ?" },
-    { "id": "others-understanding", "label": "Apprendre à mieux comprendre les autres ?" },
-    { "id": "others-improvement", "label": "Comment pousser les autres à s'améliorer ?" }
+    {
+      "id": "self-improvement",
+      "label": "Comment m'améliorer ?"
+    },
+    {
+      "id": "self-understanding",
+      "label": "Comment mieux me comprendre ?"
+    },
+    {
+      "id": "others-understanding",
+      "label": "Apprendre à mieux comprendre les autres ?"
+    },
+    {
+      "id": "others-improvement",
+      "label": "Comment pousser les autres à s'améliorer ?"
+    }
   ],
   "models": [
-    { "id": "eisenhower", "name": "Matrice d'Eisenhower", "version": "1.0.0", "category": "self-improvement", "tags": ["priorités", "productivité"], "fields": [{ "id": "taches", "label": "Tâches à prioriser", "type": "textarea", "required": true }], "defaultProvider": "local" },
-    { "id": "swot", "name": "Analyse SWOT personnelle", "version": "1.0.0", "category": "self-understanding", "tags": ["analyse", "stratégie"], "fields": [{ "id": "forces", "label": "Forces", "type": "textarea", "required": true }, { "id": "faiblesses", "label": "Faiblesses", "type": "textarea", "required": true }, { "id": "opportunites", "label": "Opportunités", "type": "textarea", "required": true }, { "id": "menaces", "label": "Menaces", "type": "textarea", "required": true }], "defaultProvider": "local" },
-    { "id": "empathy-map", "name": "Carte d'empathie", "version": "1.0.0", "category": "others-understanding", "tags": ["empathie", "communication"], "fields": [{ "id": "personne", "label": "La personne à comprendre", "type": "textarea", "required": true }], "defaultProvider": "local" },
-    { "id": "grow", "name": "Modèle GROW", "version": "1.0.0", "category": "others-improvement", "tags": ["coaching", "feedback"], "fields": [{ "id": "objectif", "label": "Objectif de progression", "type": "textarea", "required": true }], "defaultProvider": "local" }
+    {
+      "id": "eisenhower",
+      "name": "Matrice d'Eisenhower",
+      "version": "1.0.0",
+      "category": "self-improvement",
+      "tags": [
+        "priorités",
+        "productivité"
+      ],
+      "fields": [
+        {
+          "id": "taches",
+          "label": "Tâches à prioriser",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "defaultProvider": "local"
+    },
+    {
+      "id": "swot",
+      "name": "Analyse SWOT personnelle",
+      "version": "1.0.0",
+      "category": "self-understanding",
+      "tags": [
+        "analyse",
+        "stratégie"
+      ],
+      "fields": [
+        {
+          "id": "forces",
+          "label": "Forces",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "faiblesses",
+          "label": "Faiblesses",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "opportunites",
+          "label": "Opportunités",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "menaces",
+          "label": "Menaces",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "defaultProvider": "local"
+    },
+    {
+      "id": "empathy-map",
+      "name": "Carte d'empathie",
+      "version": "1.0.0",
+      "category": "others-understanding",
+      "tags": [
+        "empathie",
+        "communication"
+      ],
+      "fields": [
+        {
+          "id": "personne",
+          "label": "La personne à comprendre",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "defaultProvider": "local"
+    },
+    {
+      "id": "grow",
+      "name": "Modèle GROW",
+      "version": "1.0.0",
+      "category": "others-improvement",
+      "tags": [
+        "coaching",
+        "feedback"
+      ],
+      "fields": [
+        {
+          "id": "objectif",
+          "label": "Objectif de progression",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "defaultProvider": "local"
+    },
+    {
+      "id": "bcg",
+      "name": "Matrice BCG",
+      "version": "1.0.0",
+      "category": "self-improvement",
+      "tags": [
+        "stratégie",
+        "portefeuille"
+      ],
+      "fields": [
+        {
+          "id": "items",
+          "label": "Produits ou services à analyser",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "defaultProvider": "local"
+    }
   ]
 }
