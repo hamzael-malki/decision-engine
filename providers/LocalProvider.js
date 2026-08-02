@@ -12,7 +12,8 @@ const LOCAL_MODELS = {
   'eisenhower': Models.EisenhowerModel,
   'swot': Models.SWOTModel,
   'empathy-map': Models.EmpathyMapModel,
-  'grow': Models.GROWModel
+  'grow': Models.GROWModel,
+  'bcg': Models.BCGModel
 };
 
 export const LocalProvider = {
