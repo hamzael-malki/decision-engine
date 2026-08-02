@@ -11,3 +11,4 @@ export { EisenhowerModel } from './EisenhowerModel.js';
 export { SWOTModel } from './SWOTModel.js';
 export { EmpathyMapModel } from './EmpathyMapModel.js';
 export { GROWModel } from './GROWModel.js';
+export { BCGModel } from './BCGModel.js';

@@ -14,6 +14,7 @@ const MODEL_MAP = {
   swot: matrix,
   'empathy-map': canvas,
   grow: list,
+  bcg: distribution,
   // add modelId -> renderer mappings as needed
 };
 
