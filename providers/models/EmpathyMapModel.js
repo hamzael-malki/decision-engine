@@ -47,7 +47,8 @@ export const EmpathyMapModel = {
     if (/incompris|ignoré|oublié/i.test(textLower)) extraitFrustrations.push('Sentir non entendu');
     if (/lenteur|attente|délai/i.test(textLower)) extraitFrustrations.push('Manque de progrès rapide');
     if (/conflit|tension|désaccord/i.test(textLower)) extraitFrustrations.push('Conflits relationnels');
-    if (/échec|échec|régression/i.test(textLower)) extraitFrustrations.push('Peur de l\'échec');
+    if (/échec|erreur|régression/i.test(textLower)) extraitFrustrations.push('Peur de l\'échec');
+
 
     // Compléter avec placeholders si peu de données
     if (extraitEmotions.length === 0) extraitEmotions.push('À clarifier');

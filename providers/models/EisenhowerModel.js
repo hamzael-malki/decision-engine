@@ -1,3 +1,5 @@
+import { calculatePercentages } from '../../helpers/percentages.js';
+
 /**
  * Matrice d'Eisenhower - Priorisation des tâches
  * Catégorise les tâches selon urgence et importance.
@@ -44,14 +46,15 @@ export const EisenhowerModel = {
       }
     });
 
-    // Calcul des statistiques
+    // Calcul des statistiques (garantit un total de 100%)
     const total = tasks.length;
-    const distribution = {
-      do_first_pct: Math.round((matrix.do_first.length / total) * 100),
-      schedule_pct: Math.round((matrix.schedule.length / total) * 100),
-      delegate_pct: Math.round((matrix.delegate.length / total) * 100),
-      eliminate_pct: Math.round((matrix.eliminate.length / total) * 100)
-    };
+    const distribution = calculatePercentages({
+      do_first: matrix.do_first.length,
+      schedule: matrix.schedule.length,
+      delegate: matrix.delegate.length,
+      eliminate: matrix.eliminate.length
+    });
+
 
     return {
       modelId: modelConfig.id,

@@ -4,8 +4,9 @@
   "type": "module",
   "scripts": {
     "test": "npm run test:unit",
-    "test:unit": "node tests/unit/test-models.js",
+    "test:unit": "node tests/unit/test-models.js && node tests/unit/security.test.js",
     "test:snapshots": "python tests/tools/python/generate-snapshots.py --input tests/fixtures/sample-outputs.json --out tests/snapshots/html",
+
     "generate-snapshots-node": "node tests/tools/node/generate-snapshots.mjs --input tests/fixtures/sample-outputs.json --out tests/snapshots/html"
   }
 }

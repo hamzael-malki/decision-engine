@@ -1,13 +1,15 @@
+import { escapeHtml, formatItem } from './utils.js';
+
 export function render(output) {
   const d = (output && output.data) || {};
-  const summary = output.summary || '';
-  const objective = d.objectif || '';
-  const type = d.objectiveType || '';
+  const summary = output.summary ? escapeHtml(output.summary) : '';
+  const objective = d.objectif ? escapeHtml(d.objectif) : '';
+  const type = d.objectiveType ? escapeHtml(d.objectiveType) : '';
   const questions = d.coachingQuestions || {};
   const actions = d.actionSuggestions || [];
   const recs = d.recommendations || {};
 
-  const mkList = arr => (Array.isArray(arr) && arr.length) ? `<ul>${arr.map(i=>`<li>${i}</li>`).join('')}</ul>` : '<p>Aucune donnée</p>';
+  const mkList = arr => (Array.isArray(arr) && arr.length) ? `<ul>${arr.map(i=>`<li>${formatItem(i)}</li>`).join('')}</ul>` : '<p>Aucune donnée</p>';
 
   return `
     <div class="result-container list-result">
@@ -35,7 +37,8 @@ export function render(output) {
       </div>
 
       ${actions.length ? `<div class="coaching-questions"><h4>💡 Actions Suggérées</h4>${mkList(actions)}</div>` : ''}
-      ${recs ? `<div class="recommendations">${Object.entries(recs).map(([k,v])=>`<div><strong>${k}:</strong> ${v}</div>`).join('')}</div>` : ''}
+      ${recs ? `<div class="recommendations">${Object.entries(recs).map(([k,v])=>`<div><strong>${escapeHtml(k)}:</strong> ${escapeHtml(v)}</div>`).join('')}</div>` : ''}
     </div>
   `;
 }
+
