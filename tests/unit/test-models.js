@@ -3,10 +3,11 @@
  * Vérifie que chaque modèle fonctionne correctement en isolation
  */
 
-import { EisenhowerModel } from './providers/models/EisenhowerModel.js';
-import { SWOTModel } from './providers/models/SWOTModel.js';
-import { EmpathyMapModel } from './providers/models/EmpathyMapModel.js';
-import { GROWModel } from './providers/models/GROWModel.js';
+import { EisenhowerModel } from '../../providers/models/EisenhowerModel.js';
+import { SWOTModel } from '../../providers/models/SWOTModel.js';
+import { EmpathyMapModel } from '../../providers/models/EmpathyMapModel.js';
+import { GROWModel } from '../../providers/models/GROWModel.js';
+import { BCGModel } from '../../providers/models/BCGModel.js';
 
 // Test data
 const tests = [
