@@ -1,3 +1,5 @@
+import { calculatePercentages } from '../../helpers/percentages.js';
+
 /**
  * BCG Matrix Model
  * Input expected: userInput.items as multiline text, each line: "name | marketSharePct | growthRatePct"
@@ -57,12 +59,8 @@ export const BCGModel = {
       dogs: matrix.dogs.length
     };
 
-    const distribution = {
-      stars_pct: Math.round((counts.stars / total) * 100),
-      question_marks_pct: Math.round((counts.question_marks / total) * 100),
-      cash_cows_pct: Math.round((counts.cash_cows / total) * 100),
-      dogs_pct: Math.round((counts.dogs / total) * 100)
-    };
+    const distribution = calculatePercentages(counts);
+
 
     const recommendations = {
       stars: 'Investir pour soutenir la croissance et défendre la part de marché',
